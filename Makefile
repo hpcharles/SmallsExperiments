@@ -1,9 +1,12 @@
-RISCV_CC= riscv32-linux-gnu-gcc
-AARCH64_CC =arch64-linux-gnu-gcc
+RISCV_CC   =riscv32-linux-gnu-gcc
+AARCH64_CC =aarch64-linux-gnu-gcc
 
 CFLAGS=-Wall -Werror
 
-FILES=VectorAdd SizeOfTypes
+FILES=VectorAdd.s VectorAdd SizeOfTypes.s SizeOfTypes
+
+.c.s:
+	${CC} ${CFLAGS} -S $<
 
 all: ${FILES}
 

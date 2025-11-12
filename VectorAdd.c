@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <stdint.h>
+#include "cycle.h"
 // riscv32-linux-gnu-gcc -S VectorAdd.c -O3  -fopt-info
 // aarch64-linux-gnu-gcc -S VectorAdd.c -O3  -fopt-info
 
 // Static definitions to help compiler
-#define VSIZE 10
+#define VSIZE 10000
 typedef  int vector_t[VSIZE];
 vector_t sx, sy, sz;
 
@@ -50,6 +51,7 @@ void printVector (char * message, int * vector, int size, int ncolumn)
 int main(int argc, char * argv[])
 {
   int vSize;
+  uint64_t ticks;
 
   if (argc < 2)
     {
@@ -60,9 +62,12 @@ int main(int argc, char * argv[])
   // Static data set
   FillVector(sx,     0,  1, VSIZE);
   FillVector(sy, VSIZE, -1, VSIZE);
+  ticks = getticks();
   VaddStatic(sx, sy, sz);
-  printf ("Static size %d\n", VSIZE);
-  printVector ("Résultat Statique", sz, VSIZE, 10);
+  ticks = getticks() - ticks;
+  printf ("        %10s %10s\n", "size" , "ticks" );
+  printf ("Static  %10d %10ld \n", VSIZE, ticks);
+  //  printVector ("Résultat Statique", sz, VSIZE, 10);
 
 
   int * dx, *dy, *dz;   // Dynamic data set
@@ -72,8 +77,10 @@ int main(int argc, char * argv[])
   dz = malloc (vSize*sizeof (int));
   FillVector(dx,     0,  1, vSize);
   FillVector(dy, vSize, -1, vSize);
+  ticks = getticks();
   VaddDynamic(dx, dy, dz, vSize);
-  printf ("Dynamic size %d\n", vSize);
-  printVector ("Résultat Statique", dz, vSize, 10);
+  ticks = getticks() - ticks;
+  printf ("Dynamic %10d %10ld\n", vSize, ticks);
+  //  printVector ("Résultat Statique", dz, vSize, 10);
   return 0;
 }

@@ -1,7 +1,7 @@
 RISCV_CC   =riscv32-linux-gnu-gcc
 AARCH64_CC =aarch64-linux-gnu-gcc
 
-CFLAGS=-Wall -Werror
+CFLAGS=-Wall -Werror -O3
 
 FILES=VectorAdd.s VectorAdd SizeOfTypes.s SizeOfTypes
 

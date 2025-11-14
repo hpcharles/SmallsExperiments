@@ -7,7 +7,7 @@
 // aarch64-linux-gnu-gcc -S VectorAdd.c -O3  -fopt-info
 
 // Static definitions to help compiler
-#define VSIZE 10000000
+#define VSIZE 100000000
 typedef  int vector_t[VSIZE];
 vector_t sx, sy, sz;
 
@@ -21,7 +21,7 @@ void VaddStatic(vector_t a, vector_t b, vector_t r)
 }
 
 // Function VaddDynamic should be
-// * unrolled 
+// * unrolled
 // * vectorized (depending on target processor & compiler & optimisation option)
 void VaddDynamic(vector_t a, vector_t b, vector_t r, int vSize)
 {
@@ -52,7 +52,7 @@ void printVector (char * message, int * vector, int size, int ncolumn)
 int main(int argc, char * argv[])
 {
   int vSize;
-  uint64_t ticks;
+  uint64_t ticksDynamic, ticksStatic;
   clock_t temps;
 
   if (argc < 2)
@@ -63,13 +63,13 @@ int main(int argc, char * argv[])
   printf ("Give %d as dynamic size\n", VSIZE);
   FillVector(sx,     0,  1, VSIZE);   // Static data set
   FillVector(sy, VSIZE, -1, VSIZE);
-  ticks = getticks();
+  ticksStatic = getticks();
   temps = clock();
   VaddStatic(sx, sy, sz);
-  ticks = getticks() - ticks;
+  ticksStatic = getticks() - ticksStatic;
   temps = clock() - temps;
   printf ("        %10s %10s %10s %10s\n", "size" , "ticks", "time (s)", "dummy value");
-  printf ("Static  %10d %10ld %10f %10d\n", VSIZE, ticks, ((double) temps)/CLOCKS_PER_SEC, sz[0]);
+  printf ("Static  %10d %10ld %10f %10d\n", VSIZE, ticksStatic, ((double) temps)/CLOCKS_PER_SEC, sz[0]);
   // print sz[0] to avoid aggressive optimization
   //  printVector ("Résultat Statique", sz, VSIZE, 10);
 
@@ -80,12 +80,13 @@ int main(int argc, char * argv[])
   dz = malloc (vSize*sizeof (int));
   FillVector(dx,     0,  1, vSize);
   FillVector(dy, vSize, -1, vSize);
-  ticks = getticks();
+  ticksDynamic = getticks();
   temps = clock();
   VaddDynamic(dx, dy, dz, vSize);
-  ticks = getticks() - ticks;
+  ticksDynamic = getticks() - ticksDynamic;
   temps = clock() - temps;
-  printf ("Dynamic %10d %10ld %10f %10d\n", vSize, ticks, ((double) temps)/CLOCKS_PER_SEC, dz[0]);
+  printf ("Dynamic %10d %10ld %10f %10d\n", vSize, ticksDynamic, ((double) temps)/CLOCKS_PER_SEC, dz[0]);
+  printf ("Slow down %f\n", (float) ticksDynamic/ticksStatic);
   // print dz[0] to avoid aggressive optimization
   // printVector ("Résultat Statique", dz, vSize, 10);
   return 0;

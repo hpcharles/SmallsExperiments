@@ -15,16 +15,39 @@ vector is statically defined or dynamically defined ?
   * Static : loop and vector are statically defined
   * Dynamic : loop and vector are dyanmically defined (via the command line)
 
-Short answer : yes. But it depends on the architecture / compiler couple.
+Short answer : yes. But it depends on the architecture / compiler
+couple. Here is 3 examples on processors intel, ARM & RISC-V:
 
-```gre066469:SmallExperiments/>grep "model name" /proc/cpuinfo|uniq
- model name	: 11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz
- gre066469:SmallExperiments/>./VectorAdd 10000000
- Give 10000000 as dynamic size
-              size      ticks   time (s) dummy value
- Static    10000000   43425700   0.031402   10000000
- Dynamic   10000000   39186662   0.028347   10000000
 ```
+gre066469:SmallExperiments/>grep "model name" /proc/cpuinfo|uniq
+model name	: 11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz
+gre066469:SmallExperiments/>./VectorAdd 10000000
+Give 10000000 as dynamic size
+              size      ticks   time (s) dummy value
+Static    10000000   43425700   0.031402   10000000
+Dynamic   10000000   39186662   0.028347   10000000
+```
+
+'''
+pi00:SmallsExperiments/>sysctl hw.model
+hw.model: ARM Cortex-A72 r0p3
+pi00:SmallsExperiments/>./VectorAdd 10000000
+Give 10000000 as dynamic size
+              size      ticks   time (s) dummy value
+Static    10000000    6220316   0.125000   10000000
+Dynamic   10000000    6115440   0.109375   10000000
+'''
+
+
+'''
+r5:SmallsExperiments/>grep isa /proc/cpuinfo|uniq
+isa		: rv64imafdcvsu
+r5:SmallsExperiments/>./VectorAdd 10000000
+Give 10000000 as dynamic size
+              size      ticks   time (s) dummy value
+Static    10000000  129859989   0.171972   10000000
+Dynamic   10000000  131489160   0.174230   10000000
+'''    
 
 ## References:
 

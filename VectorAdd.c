@@ -7,7 +7,7 @@
 // aarch64-linux-gnu-gcc -S VectorAdd.c -O3  -fopt-info
 
 // Static definitions to help compiler
-#define VSIZE 100000000
+#define VSIZE 10000000
 typedef  int vector_t[VSIZE];
 vector_t sx, sy, sz;
 
@@ -57,10 +57,10 @@ int main(int argc, char * argv[])
 
   if (argc < 2)
     {
-      printf ("Give a size\n");
+      printf ("Give a size (%d)\n", VSIZE);
       exit(-1);
     }
-
+  printf ("Give %d as dynamic size\n", VSIZE);
   FillVector(sx,     0,  1, VSIZE);   // Static data set
   FillVector(sy, VSIZE, -1, VSIZE);
   ticks = getticks();
@@ -85,8 +85,8 @@ int main(int argc, char * argv[])
   VaddDynamic(dx, dy, dz, vSize);
   ticks = getticks() - ticks;
   temps = clock() - temps;
-  printf ("Dynamic %10d %10ld %10f %10d\n", vSize, ticks, ((double) temps)/CLOCKS_PER_SEC, sz[0]);
+  printf ("Dynamic %10d %10ld %10f %10d\n", vSize, ticks, ((double) temps)/CLOCKS_PER_SEC, dz[0]);
   // print dz[0] to avoid aggressive optimization
-  //  printVector ("Résultat Statique", dz, vSize, 10);
+  // printVector ("Résultat Statique", dz, vSize, 10);
   return 0;
 }

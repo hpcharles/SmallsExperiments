@@ -15,6 +15,16 @@ vector is statically defined or dynamically defined ?
   * Static : loop and vector are statically defined
   * Dynamic : loop and vector are dyanmically defined (via the command line)
 
+Short answer : yes. But it depends on the architecture / compiler couple.
+
+ gre066469:SmallExperiments/>grep "model name" /proc/cpuinfo|uniq
+ model name	: 11th Gen Intel(R) Core(TM) i5-1135G7 @ 2.40GHz
+ gre066469:SmallExperiments/>./VectorAdd 10000000
+ Give 10000000 as dynamic size
+              size      ticks   time (s) dummy value
+ Static    10000000   43425700   0.031402   10000000
+ Dynamic   10000000   39186662   0.028347   10000000
+
 
 ## References:
 
